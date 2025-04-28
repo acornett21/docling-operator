@@ -132,11 +132,11 @@ func Run(ctx context.Context) error {
 		return err
 	}
 
-	if err := (&controller.DoclingServReconciler{
+	if err := (&controller.DoclingServeReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "DoclingServ")
+		setupLog.Error(err, "unable to create controller", "controller", "DoclingServe")
 		return err
 	}
 	// +kubebuilder:scaffold:builder

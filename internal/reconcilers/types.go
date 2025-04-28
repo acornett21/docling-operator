@@ -7,5 +7,5 @@ import (
 )
 
 type Reconciler interface {
-	Reconcile(ctx context.Context, doclingServ *v1alpha1.DoclingServ) (bool, error)
+	Reconcile(ctx context.Context, doclingServe *v1alpha1.DoclingServe) (bool, error)
 }

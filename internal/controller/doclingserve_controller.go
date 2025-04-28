@@ -35,15 +35,15 @@ import (
 
 var log = logf.Log.WithName("controller_doclingserv")
 
-// DoclingServReconciler reconciles a DoclingServ object
-type DoclingServReconciler struct {
+// DoclingServeReconciler reconciles a DoclingServe object
+type DoclingServeReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
 
-// +kubebuilder:rbac:groups=docling.github.io,resources=doclingservs,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=docling.github.io,resources=doclingservs/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=docling.github.io,resources=doclingservs/finalizers,verbs=update
+// +kubebuilder:rbac:groups=docling.github.io,resources=doclingserves,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=docling.github.io,resources=doclingserves/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=docling.github.io,resources=doclingserves/finalizers,verbs=update
 // +kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=core,resources=pods;services,verbs=update;create;get;list;watch
 // +kubebuilder:rbac:groups=route.openshift.io,resources=routes;routes/custom-host,verbs=*
@@ -51,20 +51,20 @@ type DoclingServReconciler struct {
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
-// the DoclingServ object against the actual cluster state, and then
+// the DoclingServe object against the actual cluster state, and then
 // perform operations to make the cluster state reflect the state specified by
 // the user.
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.19.0/pkg/reconcile
-func (r *DoclingServReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *DoclingServeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	reqLogger := logf.FromContext(ctx, "Request.Namespace", req.Namespace, "Request.Name", req.Name)
-	reqLogger.Info("Reconciling DoclingServ")
+	reqLogger.Info("Reconciling DoclingServe")
 
 	ctx = logf.IntoContext(ctx, reqLogger)
 
-	currentDoclingServ := &v1alpha1.DoclingServ{}
-	err := r.Get(ctx, req.NamespacedName, currentDoclingServ)
+	currentDoclingServe := &v1alpha1.DoclingServe{}
+	err := r.Get(ctx, req.NamespacedName, currentDoclingServe)
 	if err != nil {
 		if errors.IsNotFound(err) {
 			// Error reading the object - requeue the request.
@@ -81,9 +81,9 @@ func (r *DoclingServReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 	requeueResult := false
 	var errResult error = nil
-	doclingServ := currentDoclingServ.DeepCopy()
+	doclingServe := currentDoclingServe.DeepCopy()
 	for _, r := range resourceReconcilers {
-		reque, err := r.Reconcile(ctx, doclingServ)
+		reque, err := r.Reconcile(ctx, doclingServe)
 		if err != nil {
 			// Only capture the first error
 			log.Error(err, "requeuing with error")
@@ -96,9 +96,9 @@ func (r *DoclingServReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *DoclingServReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *DoclingServeReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&v1alpha1.DoclingServ{}).
+		For(&v1alpha1.DoclingServe{}).
 		Owns(&appsv1.Deployment{}).
 		Owns(&corev1.Service{}).
 		Owns(&routev1.Route{}).

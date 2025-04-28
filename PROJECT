@@ -16,7 +16,7 @@ resources:
     namespaced: true
   controller: true
   domain: docling.github.io
-  kind: DoclingServ
+  kind: DoclingServe
   path: github.io/opdev/docling-operator/api/v1alpha1
   version: v1alpha1
 version: "3"

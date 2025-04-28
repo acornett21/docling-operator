@@ -30,7 +30,7 @@ import (
 	doclinggithubiov1alpha1 "github.io/opdev/docling-operator/api/v1alpha1"
 )
 
-var _ = Describe("DoclingServ Controller", func() {
+var _ = Describe("DoclingServe Controller", func() {
 	Context("When reconciling a resource", func() {
 		const resourceName = "test-resource"
 
@@ -40,18 +40,18 @@ var _ = Describe("DoclingServ Controller", func() {
 			Name:      resourceName,
 			Namespace: "default", // TODO(user):Modify as needed
 		}
-		doclingserv := &doclinggithubiov1alpha1.DoclingServ{}
+		doclingserv := &doclinggithubiov1alpha1.DoclingServe{}
 
 		BeforeEach(func() {
-			By("creating the custom resource for the Kind DoclingServ")
+			By("creating the custom resource for the Kind DoclingServe")
 			err := k8sClient.Get(ctx, typeNamespacedName, doclingserv)
 			if err != nil && errors.IsNotFound(err) {
-				resource := &doclinggithubiov1alpha1.DoclingServ{
+				resource := &doclinggithubiov1alpha1.DoclingServe{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      resourceName,
 						Namespace: "default",
 					},
-					Spec: doclinggithubiov1alpha1.DoclingServSpec{
+					Spec: doclinggithubiov1alpha1.DoclingServeSpec{
 						APIServer: &doclinggithubiov1alpha1.APIServer{
 							Image: "registry/image:tag",
 						},
@@ -66,16 +66,16 @@ var _ = Describe("DoclingServ Controller", func() {
 
 		AfterEach(func() {
 			// TODO(user): Cleanup logic after each test, like removing the resource instance.
-			resource := &doclinggithubiov1alpha1.DoclingServ{}
+			resource := &doclinggithubiov1alpha1.DoclingServe{}
 			err := k8sClient.Get(ctx, typeNamespacedName, resource)
 			Expect(err).NotTo(HaveOccurred())
 
-			By("Cleanup the specific resource instance DoclingServ")
+			By("Cleanup the specific resource instance DoclingServe")
 			Expect(k8sClient.Delete(ctx, resource)).To(Succeed())
 		})
 		It("should successfully reconcile the resource", func() {
 			By("Reconciling the created resource")
-			controllerReconciler := &DoclingServReconciler{
+			controllerReconciler := &DoclingServeReconciler{
 				Client: k8sClient,
 				Scheme: k8sClient.Scheme(),
 			}
@@ -88,15 +88,15 @@ var _ = Describe("DoclingServ Controller", func() {
 			// Example: If you expect a certain status condition after reconciliation, verify it here.
 		})
 		It("should fail CRD validation", func() {
-			By("creating a custom resource for the Kind DoclingServ that includes both `Local` and `KFP` resources")
+			By("creating a custom resource for the Kind DoclingServe that includes both `Local` and `KFP` resources")
 			err := k8sClient.Get(ctx, typeNamespacedName, doclingserv)
 			if err != nil && errors.IsNotFound(err) {
-				resource := &doclinggithubiov1alpha1.DoclingServ{
+				resource := &doclinggithubiov1alpha1.DoclingServe{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      resourceName,
 						Namespace: "default",
 					},
-					Spec: doclinggithubiov1alpha1.DoclingServSpec{
+					Spec: doclinggithubiov1alpha1.DoclingServeSpec{
 						APIServer: &doclinggithubiov1alpha1.APIServer{
 							Image: "registry/image:tag",
 						},

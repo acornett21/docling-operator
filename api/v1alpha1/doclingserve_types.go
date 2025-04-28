@@ -22,8 +22,8 @@ import (
 
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// DoclingServSpec defines the desired state of DoclingServ.
-type DoclingServSpec struct {
+// DoclingServeSpec defines the desired state of DoclingServe.
+type DoclingServeSpec struct {
 	// +kubebuilder:validation:Required
 	APIServer *APIServer `json:"apiServer"`
 
@@ -88,8 +88,8 @@ type KFP struct {
 	Endpoint string `json:"endpoint"`
 }
 
-// DoclingServStatus defines the observed state of DoclingServ
-type DoclingServStatus struct {
+// DoclingServeStatus defines the observed state of DoclingServe
+type DoclingServeStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
@@ -108,24 +108,24 @@ type DoclingServStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
-// DoclingServ is the Schema for the doclingservs API
-type DoclingServ struct {
+// DoclingServe is the Schema for the doclingservs API
+type DoclingServe struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   DoclingServSpec   `json:"spec,omitempty"`
-	Status DoclingServStatus `json:"status,omitempty"`
+	Spec   DoclingServeSpec   `json:"spec,omitempty"`
+	Status DoclingServeStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// DoclingServList contains a list of DoclingServ
-type DoclingServList struct {
+// DoclingServeList contains a list of DoclingServe
+type DoclingServeList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []DoclingServ `json:"items"`
+	Items           []DoclingServe `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&DoclingServ{}, &DoclingServList{})
+	SchemeBuilder.Register(&DoclingServe{}, &DoclingServeList{})
 }

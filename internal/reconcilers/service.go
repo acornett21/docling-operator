@@ -28,11 +28,11 @@ func NewServiceReconciler(client client.Client, scheme *runtime.Scheme) *Service
 	}
 }
 
-func (r *ServiceReconciler) Reconcile(ctx context.Context, doclingServ *v1alpha1.DoclingServ) (bool, error) {
+func (r *ServiceReconciler) Reconcile(ctx context.Context, doclingServe *v1alpha1.DoclingServe) (bool, error) {
 	log := logf.FromContext(ctx)
-	service := &corev1.Service{ObjectMeta: metav1.ObjectMeta{Name: doclingServ.Name + "-service", Namespace: doclingServ.Namespace}}
+	service := &corev1.Service{ObjectMeta: metav1.ObjectMeta{Name: doclingServe.Name + "-service", Namespace: doclingServe.Namespace}}
 	_, err := controllerutil.CreateOrUpdate(ctx, r.Client, service, func() error {
-		labels := labelsForDocling(doclingServ.Name)
+		labels := labelsForDocling(doclingServe.Name)
 		service.Labels = labels
 		service.Spec.Selector = labels
 		service.Spec.Ports = []corev1.ServicePort{
@@ -42,7 +42,7 @@ func (r *ServiceReconciler) Reconcile(ctx context.Context, doclingServ *v1alpha1
 				TargetPort: intstr.FromInt32(5001),
 			},
 		}
-		_ = ctrl.SetControllerReference(doclingServ, service, r.Scheme)
+		_ = ctrl.SetControllerReference(doclingServe, service, r.Scheme)
 		return nil
 	})
 	if err != nil {

@@ -27,19 +27,19 @@ func NewDeploymentReconciler(client client.Client, scheme *runtime.Scheme) *Depl
 	}
 }
 
-func (r *DeploymentReconciler) Reconcile(ctx context.Context, doclingServ *v1alpha1.DoclingServ) (bool, error) {
+func (r *DeploymentReconciler) Reconcile(ctx context.Context, doclingServe *v1alpha1.DoclingServe) (bool, error) {
 	log := logf.FromContext(ctx)
 
-	deployment := &appsv1.Deployment{ObjectMeta: metav1.ObjectMeta{Name: doclingServ.Name + "-deployment", Namespace: doclingServ.Namespace}}
+	deployment := &appsv1.Deployment{ObjectMeta: metav1.ObjectMeta{Name: doclingServe.Name + "-deployment", Namespace: doclingServe.Namespace}}
 	_, err := controllerutil.CreateOrUpdate(ctx, r.Client, deployment, func() error {
-		labels := labelsForDocling(doclingServ.Name)
+		labels := labelsForDocling(doclingServe.Name)
 		if deployment.CreationTimestamp.IsZero() {
 			deployment.Spec.Selector = &metav1.LabelSelector{
 				MatchLabels: labels,
 			}
 		}
 
-		deployment.Spec.Replicas = &doclingServ.Spec.APIServer.Instances
+		deployment.Spec.Replicas = &doclingServe.Spec.APIServer.Instances
 		deployment.Spec.Template = corev1.PodTemplateSpec{
 			ObjectMeta: metav1.ObjectMeta{
 				Labels: labels,
@@ -47,7 +47,7 @@ func (r *DeploymentReconciler) Reconcile(ctx context.Context, doclingServ *v1alp
 			Spec: corev1.PodSpec{
 				Containers: []corev1.Container{
 					{
-						Image: doclingServ.Spec.APIServer.Image,
+						Image: doclingServe.Spec.APIServer.Image,
 						Name:  "docling-serv",
 						Command: []string{
 							"docling-serve",
@@ -59,28 +59,28 @@ func (r *DeploymentReconciler) Reconcile(ctx context.Context, doclingServ *v1alp
 			},
 		}
 
-		if doclingServ.Spec.APIServer.EnableUI {
+		if doclingServe.Spec.APIServer.EnableUI {
 			deployment.Spec.Template.Spec.Containers[0].Env = append(deployment.Spec.Template.Spec.Containers[0].Env, []corev1.EnvVar{{
 				Name:  "DOCLING_SERVE_ENABLE_UI",
 				Value: "true",
 			}}...)
 		}
 
-		if doclingServ.Spec.Engine.Local != nil {
+		if doclingServe.Spec.Engine.Local != nil {
 			deployment.Spec.Template.Spec.Containers[0].Env = append(deployment.Spec.Template.Spec.Containers[0].Env, []corev1.EnvVar{{
 				Name:  "DOCLING_SERVE_ENG_LOC_NUM_WORKERS",
-				Value: strconv.Itoa(int(doclingServ.Spec.Engine.Local.NumWorkers)),
+				Value: strconv.Itoa(int(doclingServe.Spec.Engine.Local.NumWorkers)),
 			}}...)
 		}
 
-		if doclingServ.Spec.Engine.KFP != nil {
+		if doclingServe.Spec.Engine.KFP != nil {
 			deployment.Spec.Template.Spec.Containers[0].Env = append(deployment.Spec.Template.Spec.Containers[0].Env, []corev1.EnvVar{{
 				Name:  "DOCLING_SERVE_ENG_KFP_ENDPOINT",
-				Value: doclingServ.Spec.Engine.KFP.Endpoint,
+				Value: doclingServe.Spec.Engine.KFP.Endpoint,
 			}}...)
 		}
 
-		_ = ctrl.SetControllerReference(doclingServ, deployment, r.Scheme)
+		_ = ctrl.SetControllerReference(doclingServe, deployment, r.Scheme)
 
 		return nil
 	})

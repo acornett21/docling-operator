@@ -28,25 +28,25 @@ func NewRouteReconciler(client client.Client, scheme *runtime.Scheme) *RouteReco
 	}
 }
 
-func (r *RouteReconciler) Reconcile(ctx context.Context, doclingServ *v1alpha1.DoclingServ) (bool, error) {
-	if doclingServ.Spec.Route != nil && doclingServ.Spec.Route.Enabled {
-		return r.createOrUpdate(ctx, doclingServ)
+func (r *RouteReconciler) Reconcile(ctx context.Context, doclingServe *v1alpha1.DoclingServe) (bool, error) {
+	if doclingServe.Spec.Route != nil && doclingServe.Spec.Route.Enabled {
+		return r.createOrUpdate(ctx, doclingServe)
 	}
 
-	return r.delete(ctx, doclingServ)
+	return r.delete(ctx, doclingServe)
 }
 
-func (r *RouteReconciler) createOrUpdate(ctx context.Context, doclingServ *v1alpha1.DoclingServ) (bool, error) {
+func (r *RouteReconciler) createOrUpdate(ctx context.Context, doclingServe *v1alpha1.DoclingServe) (bool, error) {
 	log := logf.FromContext(ctx)
-	route := &routev1.Route{ObjectMeta: metav1.ObjectMeta{Name: doclingServ.Name + "-route", Namespace: doclingServ.Namespace}}
+	route := &routev1.Route{ObjectMeta: metav1.ObjectMeta{Name: doclingServe.Name + "-route", Namespace: doclingServe.Namespace}}
 	_, err := controllerutil.CreateOrUpdate(ctx, r.Client, route, func() error {
-		labels := labelsForDocling(doclingServ.Name)
+		labels := labelsForDocling(doclingServe.Name)
 		route.Labels = labels
 		route.Spec = routev1.RouteSpec{
 			Path: "/",
 			To: routev1.RouteTargetReference{
 				Kind: "Service",
-				Name: doclingServ.Name + "-service",
+				Name: doclingServe.Name + "-service",
 			},
 			Port: &routev1.RoutePort{
 				TargetPort: intstr.FromString("http"),
@@ -55,7 +55,7 @@ func (r *RouteReconciler) createOrUpdate(ctx context.Context, doclingServ *v1alp
 				Termination: routev1.TLSTerminationEdge,
 			},
 		}
-		_ = ctrl.SetControllerReference(doclingServ, route, r.Scheme)
+		_ = ctrl.SetControllerReference(doclingServe, route, r.Scheme)
 		return nil
 	})
 	if err != nil {
@@ -67,10 +67,10 @@ func (r *RouteReconciler) createOrUpdate(ctx context.Context, doclingServ *v1alp
 	return false, nil
 }
 
-func (r *RouteReconciler) delete(ctx context.Context, doclingServ *v1alpha1.DoclingServ) (bool, error) {
+func (r *RouteReconciler) delete(ctx context.Context, doclingServe *v1alpha1.DoclingServe) (bool, error) {
 	log := logf.FromContext(ctx)
-	route := &routev1.Route{ObjectMeta: metav1.ObjectMeta{Name: doclingServ.Name + "-route", Namespace: doclingServ.Namespace}}
-	if err := r.Get(ctx, types.NamespacedName{Name: doclingServ.Name + "-route", Namespace: doclingServ.Namespace}, route); err != nil && !errors.IsNotFound(err) {
+	route := &routev1.Route{ObjectMeta: metav1.ObjectMeta{Name: doclingServe.Name + "-route", Namespace: doclingServe.Namespace}}
+	if err := r.Get(ctx, types.NamespacedName{Name: doclingServe.Name + "-route", Namespace: doclingServe.Namespace}, route); err != nil && !errors.IsNotFound(err) {
 		log.Error(err, "Error deleting Route", "Route.Namespace", route.Namespace, "Route.Name", route.Name)
 		return true, err
 	} else if errors.IsNotFound(err) {

@@ -48,6 +48,44 @@ spec:
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
       version: v1alpha1
+    - description: DoclingServe is the Schema for the doclingservs API
+      displayName: Docling Serve
+      kind: DoclingServe
+      name: doclingserves.docling.github.io
+      specDescriptors:
+      - description: EnableUI determines whether to run the docling-serve ui.
+        displayName: Enable UI
+        path: apiServer.enableUI
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+      - description: Image specifics which docling-serve container image to deploy.
+        displayName: Image
+        path: apiServer.image
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - description: Instances represents the desired number of docling-serve workloads
+          to create.
+        displayName: Instance Count
+        path: apiServer.instances
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:podCount
+      - description: 'The Kubeflow Pipeline endpoint location, example: https://NAME.NAMESPACE.svc.cluster.local:8888'
+        displayName: Kubeflow Pipeline Endpoint
+        path: engine.kfp.endpoint
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - description: NumWorkers the desired number workers/threads processing the
+          incoming tasks.
+        displayName: Number of Workers
+        path: engine.local.numWorkers
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:podCount
+      - description: Enabled determines whether to create a route.
+        displayName: Enable Route
+        path: route.enabled
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+      version: v1alpha1
   description: docling-operator provisions an instance of the docling api service.
   displayName: docling-operator
   icon:

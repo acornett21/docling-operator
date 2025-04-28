@@ -4,20 +4,20 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.16.1
-  name: doclingservs.docling.github.io
+  name: doclingserves.docling.github.io
 spec:
   group: docling.github.io
   names:
-    kind: DoclingServ
-    listKind: DoclingServList
-    plural: doclingservs
-    singular: doclingserv
+    kind: DoclingServe
+    listKind: DoclingServeList
+    plural: doclingserves
+    singular: doclingserve
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: DoclingServ is the Schema for the doclingservs API
+        description: DoclingServe is the Schema for the doclingservs API
         properties:
           apiVersion:
             description: |-
@@ -37,7 +37,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: DoclingServSpec defines the desired state of DoclingServ.
+            description: DoclingServeSpec defines the desired state of DoclingServe.
             properties:
               apiServer:
                 description: APIServer configures a docling-serve workload
@@ -104,7 +104,7 @@ spec:
             - engine
             type: object
           status:
-            description: DoclingServStatus defines the observed state of DoclingServ
+            description: DoclingServeStatus defines the observed state of DoclingServe
             properties:
               conditions:
                 description: |-

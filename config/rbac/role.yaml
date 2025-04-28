@@ -30,7 +30,7 @@ rules:
 - apiGroups:
   - docling.github.io
   resources:
-  - doclingservs
+  - doclingserves
   verbs:
   - create
   - delete
@@ -42,13 +42,13 @@ rules:
 - apiGroups:
   - docling.github.io
   resources:
-  - doclingservs/finalizers
+  - doclingserves/finalizers
   verbs:
   - update
 - apiGroups:
   - docling.github.io
   resources:
-  - doclingservs/status
+  - doclingserves/status
   verbs:
   - get
   - patch
